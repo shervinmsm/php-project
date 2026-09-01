@@ -1,7 +1,6 @@
 <?php
 
 
-$sliders = $db->query("SELECT * FROM posts_slider");
 
 
 ?>
