@@ -56,17 +56,25 @@ $categories = $db->query($query);
 
             $invalidInputName = "";
             $invalidInputEmail = "";
+            $message = "";
 
             if (isset($_POST['subscribe'])) {
                 if (empty(trim($_POST['name']))) {
                     $invalidInputName = "فیلد نام الزامیست";
-                }
-                if (empty(trim($_POST['email']))) {
+                } elseif (empty(trim($_POST['email']))) {
                     $invalidInputEmail = "فیلد  ایمیل الزامیست";
+                } else {
+                    $name = $_POST['name'];
+                    $email = $_POST['email'];
+
+                    $subscribeInsert = $db->prepare("INSERT INTO subscribers (name, email ) VALUES (:name, :email)");
+                    $subscribeInsert->execute(['name' => $name, 'email' => $email]);
+                    $message = "عضویت شما با موفقیت انجام شد.";
                 }
             }
             ?>
 
+                <div class="text-success"><?= $message ?></div>
 
             <form method="POST">
                 <div class="mb-3">
