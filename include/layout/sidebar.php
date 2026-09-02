@@ -1,5 +1,8 @@
 <?php
 
+$query = "SELECT * FROM categories";
+$categories = $db->query($query);
+
 
 
 
@@ -25,18 +28,20 @@
     <div class="card mt-4">
         <div class="fw-bold fs-6 card-header">دسته بندی ها</div>
         <ul class="list-group list-group-flush p-0">
-            <li class="list-group-item">
-                <a class="link-body-emphasis text-decoration-none" href="#">طبیعت</a>
-            </li>
-            <li class="list-group-item">
-                <a class="link-body-emphasis text-decoration-none" href="#">گردشگری</a>
-            </li>
-            <li class="list-group-item">
-                <a class="link-body-emphasis text-decoration-none" href="#">تکنولوژی</a>
-            </li>
-            <li class="list-group-item">
-                <a class="link-body-emphasis text-decoration-none" href="#">متفرقه</a>
-            </li>
+            <?php if ($categories->rowCount() > 0): ?>
+                <?php foreach ($categories as $category): ?>
+
+                    <li class="list-group-item">
+                        <a class="link-body-emphasis text-decoration-none" href="index.php?category=<?= $category['id'] ?>
+">
+                            <?= $category['title'] ?>
+                        </a>
+                    </li>
+                <?php endforeach ?>
+
+            <?php endif ?>
+
+
         </ul>
     </div>
 
@@ -45,17 +50,41 @@
         <div class="card-body">
             <p class="fw-bold fs-6">عضویت در خبرنامه</p>
 
-            <form>
+
+
+            <?php
+
+            $invalidInputName = "";
+            $invalidInputEmail = "";
+
+            if (isset($_POST['subscribe'])) {
+                if (empty(trim($_POST['name']))) {
+                    $invalidInputName = "فیلد نام الزامیست";
+                }
+                if (empty(trim($_POST['email']))) {
+                    $invalidInputEmail = "فیلد  ایمیل الزامیست";
+                }
+            }
+            ?>
+
+
+            <form method="POST">
                 <div class="mb-3">
                     <label class="form-label">نام</label>
-                    <input type="text" class="form-control" />
+                    <input type="text" name="name" class="form-control" />
+                    <div class="form-text text-danger">
+                        <?= $invalidInputName ?>
+                    </div>
                 </div>
                 <div class="mb-3">
                     <label class="form-label">ایمیل</label>
-                    <input type="email" class="form-control" />
+                    <input type="email" name="email" class="form-control" />
+                    <div class="form-text text-danger">
+                        <?= $invalidInputEmail ?>
+                    </div>
                 </div>
                 <div class="d-grid gap-2">
-                    <button type="submit" class="btn btn-secondary">
+                    <button type="submit" name="subscribe" class="btn btn-secondary">
                         ارسال
                     </button>
                 </div>
