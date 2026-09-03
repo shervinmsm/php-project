@@ -13,9 +13,9 @@ $categories = $db->query($query);
     <div class="card">
         <div class="card-body">
             <p class="fw-bold fs-6">جستجو در وبلاگ</p>
-            <form action="search.html">
+            <form action="search.php" method="GET">
                 <div class="input-group mb-3">
-                    <input type="text" class="form-control" placeholder="جستجو ..." />
+                    <input type="text" name="search" class="form-control" placeholder="جستجو ..." />
                     <button class="btn btn-secondary" type="submit">
                         <i class="bi bi-search"></i>
                     </button>
@@ -74,7 +74,9 @@ $categories = $db->query($query);
             }
             ?>
 
-                <div class="text-success"><?= $message ?></div>
+            <div class="text-success">
+                <?= $message ?>
+            </div>
 
             <form method="POST">
                 <div class="mb-3">
