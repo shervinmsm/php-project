@@ -44,7 +44,7 @@ if (isset($_GET['category'])) {
                                     <?= substr($post["body"], 0, 500) ?>
                                 </p>
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <a href="single.html" class="btn btn-sm btn-dark">مشاهده</a>
+                                <a href="single.php?post=<?= $post['id']?>" class="btn btn-sm btn-dark">مشاهده</a>
 
                                     <p class="fs-7 mb-0">
                                         نویسنده :
