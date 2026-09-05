@@ -1,8 +1,3 @@
-
-<?php
-
-?>
-
 <!-- Footer Section -->
 <footer class="text-center pt-4 my-md-5 pt-md-5 border-top">
     <div class="row flex-column">
