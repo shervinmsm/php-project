@@ -2,6 +2,8 @@
 include(__DIR__ . "/../config.php");
 include(__DIR__ . "/../db.php");
 
+$path = $_SERVER['REQUEST_URI'];
+
 
 ?>
 <!DOCTYPE html>
@@ -12,20 +14,20 @@ include(__DIR__ . "/../db.php");
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>php tutorial || blog project || webprog.io</title>
 
-    <!-- <link
-            rel="stylesheet"
-            href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
-        /> -->
-    <link rel="stylesheet" href="./assets/css/bootstrap-icons.css" />
-    <!-- <link
-            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
-            rel="stylesheet"
-            integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9"
-            crossorigin="anonymous"
-        /> -->
-    <link href="./assets/css/bootstrap.min.css" rel="stylesheet" />
+    <?php if (str_contains($path, "pages")): ?>
 
-    <link rel="stylesheet" href="./assets/css/style.css" />
+        <link rel="stylesheet" href="../../assets/css/bootstrap-icons.css" />
+        <link href="../../assets/css/bootstrap.min.css" rel="stylesheet" />
+        <link rel="stylesheet" href="../../assets/css/style.css" />
+
+
+    <?php else : ?>
+
+        <link rel="stylesheet" href="./assets/css/bootstrap-icons.css" />
+        <link href="./assets/css/bootstrap.min.css" rel="stylesheet" />
+        <link rel="stylesheet" href="./assets/css/style.css" />
+
+    <?php endif ?>
 </head>
 
 <body>
