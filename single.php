@@ -45,7 +45,7 @@ if (isset($_GET['post'])) {
                                         </h5>
                                         <div>
                                             <span class="badge text-bg-secondary">
-                                                <?= $post['category'] ?>
+                                                <?= $post['category_id'] ?>
                                             </span>
                                         </div>
                                     </div>
@@ -72,18 +72,18 @@ if (isset($_GET['post'])) {
                             $invalidInputName = "";
                             $invalidInputComment = "";
                             $message = "";
-                            if (isset($_POST['subscribe'])) {
+                            if (isset($_POST['postComment'])) {
                                 if (empty(trim($_POST['name']))) {
                                     $invalidInputName = "فیلد نام الزامیست";
-                                } elseif (empty(trim($_POST['email']))) {
+                                } elseif (empty(trim($_POST['comment']))) {
                                     $invalidInputComment = "فیلد کامنت الزامیست";
                                 } else {
                                     $name = $_POST['name'];
                                     $comment = $_POST['comment'];
 
 
-                                    $commentInsert = $db->prepare("INSERT INTO comments(name, comment, post_id, status) VALUES (:name, :comment, :post_id, )");
-                                    $commentInsert->execute(['name' => $name, 'comment' => $comment, 'post_id' => $postId]);
+                                    $commentInsert = $db->prepare("INSERT INTO comments(name, comment, post_id, status) VALUES (:name, :comment, :post_id , :status)");
+                                    $commentInsert->execute(['name' => $name, 'comment' => $comment, 'post_id' => $postId, 'status' => 0]);
 
                                     $message = "کامنت شما با موفقیت ثبت شد و بعد از تایید نمایش داده می شود.";
                                 }

@@ -1,4 +1,39 @@
-<?php include "./include/layout/header.php"; ?>
+<?php include "./include/layout/header.php";
+
+if (isset($_GET['entity']) && isset($_GET['action']) && isset($_GET['id'])) {
+
+    $entity = $_GET['entity'];
+    $action = $_GET['action'];
+    $id = $_GET['id'];
+
+    switch ($entity) {
+        case 'post':
+
+            $query = $db->prepare('DELETE FROM posts WHERE id = :id');
+            break;
+
+        case 'comment':
+
+            $query = $db->prepare('DELETE FROM comments WHERE id = :id');
+            break;
+
+        case 'category':
+
+            $query = $db->prepare('DELETE FROM categories WHERE id = :id');
+            break;
+    }
+
+    $query->execute(['id' => $id]);
+}
+
+$posts = $db->query("SELECT * FROM posts ORDER BY id DESC LIMIT 5");
+$comments = $db->query("SELECT * FROM comments ORDER BY id DESC LIMIT 5");
+$categories = $db->query("SELECT * FROM categories ORDER BY id DESC ");
+
+
+
+
+?>
 
 
 
@@ -17,155 +52,148 @@
             <!-- Recently Posts -->
             <div class="mt-4">
                 <h4 class="text-secondary fw-bold">مقالات اخیر</h4>
-                <div class="table-responsive small">
-                    <table class="table table-hover align-middle">
-                        <thead>
-                            <tr>
-                                <th>id</th>
-                                <th>عنوان</th>
-                                <th>نویسنده</th>
-                                <th>عملیات</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <th>1</th>
-                                <td>لورم ایپسوم متن ساختگی</td>
-                                <td>علی شیخ</td>
-                                <td>
-                                    <a href="#" class="btn btn-sm btn-outline-dark">ویرایش</a>
-                                    <a href="#" class="btn btn-sm btn-outline-danger">حذف</a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>2</th>
-                                <td>لورم ایپسوم متن</td>
-                                <td>علی شیخ</td>
-                                <td>
-                                    <a href="#" class="btn btn-sm btn-outline-dark">ویرایش</a>
-                                    <a href="#" class="btn btn-sm btn-outline-danger">حذف</a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>3</th>
-                                <td>لورم ایپسوم متن ساختگی</td>
-                                <td>علی شیخ</td>
-                                <td>
-                                    <a href="#" class="btn btn-sm btn-outline-dark">ویرایش</a>
-                                    <a href="#" class="btn btn-sm btn-outline-danger">حذف</a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>4</th>
-                                <td>لورم ایپسوم</td>
-                                <td>علی شیخ</td>
-                                <td>
-                                    <a href="#" class="btn btn-sm btn-outline-dark">ویرایش</a>
-                                    <a href="#" class="btn btn-sm btn-outline-danger">حذف</a>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                <?php if ($posts->rowCount() > 0): ?>
+
+                    <div class="table-responsive small">
+                        <table class="table table-hover align-middle">
+                            <thead>
+                                <tr>
+                                    <th>id</th>
+                                    <th>عنوان</th>
+                                    <th>نویسنده</th>
+                                    <th>عملیات</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($posts as $post): ?>
+                                    <tr>
+                                        <th>
+                                            <?= $post['id'] ?>
+                                        </th>
+                                        <td>
+                                            <?= $post['title'] ?>
+                                        </td>
+                                        <td>
+                                            <?= $post['author'] ?>
+                                        </td>
+                                        <td>
+                                            <a href="/admin-panel/index.php?entity=post&action=edit&id=<?= $post['id'] ?> "
+                                                class="btn btn-sm btn-outline-dark">ویرایش</a>
+                                            <a href="/admin-panel/index.php?entity=post&action=edit&id=<?= $post['id'] ?> "
+                                                class="btn btn-sm btn-outline-danger">حذف</a>
+                                        </td>
+                                    </tr>
+                                <?php endforeach ?>
+                            </tbody>
+                        </table>
+                    </div>
+                <?php else : ?>
+                    <div class="col">
+                        <div class="alert-danger">مقاله ای یافت نشد.</div>
+                    </div>
+
+                <?php endif ?>
+
             </div>
 
             <!-- Recently Comments -->
             <div class="mt-4">
                 <h4 class="text-secondary fw-bold">کامنت های اخیر</h4>
-                <div class="table-responsive small">
-                    <table class="table table-hover align-middle">
-                        <thead>
-                            <tr>
-                                <th>id</th>
-                                <th>نام</th>
-                                <th>متن کامنت</th>
-                                <th>عملیات</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <th>1</th>
-                                <td>علی شیخ</td>
-                                <td>
-                                    لورم ایپسوم متن ساختگی با تولید
-                                    سادگی نامفهوم از صنعت چاپ و با
-                                    استفاده از طراحان گرافیک است.
-                                </td>
-                                <td>
-                                    <a href="#" class="btn btn-sm btn-outline-dark disabled">تایید شده</a>
-                                    <a href="#" class="btn btn-sm btn-outline-danger">حذف</a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>2</th>
-                                <td>علی شیخ</td>
-                                <td>
-                                    لورم ایپسوم متن ساختگی با تولید
-                                    سادگی نامفهوم از صنعت چاپ و با
-                                    استفاده از طراحان گرافیک است.
-                                </td>
-                                <td>
-                                    <a href="#" class="btn btn-sm btn-outline-info">در انتظار تایید</a>
-                                    <a href="#" class="btn btn-sm btn-outline-danger">حذف</a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>3</th>
-                                <td>علی شیخ</td>
-                                <td>
-                                    لورم ایپسوم متن ساختگی با تولید
-                                    سادگی نامفهوم از صنعت چاپ
-                                </td>
-                                <td>
-                                    <a href="#" class="btn btn-sm btn-outline-dark disabled">تایید شده</a>
-                                    <a href="#" class="btn btn-sm btn-outline-danger">حذف</a>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                <?php if ($comments->rowCount() > 0): ?>
+
+                    <div class="table-responsive small">
+                        <table class="table table-hover align-middle">
+                            <thead>
+                                <tr>
+                                    <th>id</th>
+                                    <th>نام</th>
+                                    <th>متن کامنت</th>
+                                    <th>عملیات</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                <?php foreach ($comments as $comment): ?>
+                                    <tr>
+                                        <th>
+                                            <?= $comment['id'] ?>
+                                        </th>
+
+                                        <td>
+                                            <?= $comment['name'] ?>
+                                        </td>
+                                        <td>
+
+                                            <?= $comment['comment'] ?>
+                                        </td>
+                                        <td>
+                                            <a href="/admin-panel/index.php?entity=comment&action=edit&id=<?= $comment['id'] ?>"
+                                                class="btn btn-sm btn-outline-dark disabled">تایید شده</a>
+                                            <a href="/admin-panel/index.php?entity=comment&action=delete&id=<?= $comment['id'] ?>"
+                                                class="btn btn-sm btn-outline-danger">حذف</a>
+                                        </td>
+                                    </tr>
+                                <?php endforeach ?>
+
+                            </tbody>
+                        </table>
+                    </div>
+                <?php else : ?>
+                    <div class="col">
+                        <div class="alert-danger">کامنتی یافت نشد.</div>
+                    </div>
+
+                <?php endif ?>
+
+
             </div>
 
             <!-- Categories -->
             <div class="mt-4">
                 <h4 class="text-secondary fw-bold">دسته بندی</h4>
-                <div class="table-responsive small">
-                    <table class="table table-hover align-middle">
-                        <thead>
-                            <tr>
-                                <th>id</th>
-                                <th>عنوان</th>
-                                <th>عملیات</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <th>1</th>
-                                <td>طبیعت</td>
-                                <td>
-                                    <a href="#" class="btn btn-sm btn-outline-dark">ویرایش</a>
-                                    <a href="#" class="btn btn-sm btn-outline-danger">حذف</a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>2</th>
-                                <td>گردشگری</td>
-                                <td>
-                                    <a href="#" class="btn btn-sm btn-outline-dark">ویرایش</a>
-                                    <a href="#" class="btn btn-sm btn-outline-danger">حذف</a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>3</th>
-                                <td>متفرقه</td>
-                                <td>
-                                    <a href="#" class="btn btn-sm btn-outline-dark">ویرایش</a>
-                                    <a href="#" class="btn btn-sm btn-outline-danger">حذف</a>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                <?php if ($categories->rowCount() > 0): ?>
+
+                    <div class="table-responsive small">
+                        <table class="table table-hover align-middle">
+                            <thead>
+                                <tr>
+                                    <th>id</th>
+                                    <th>عنوان</th>
+                                    <th>عملیات</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($categories as $category): ?>
+
+                                    <tr>
+                                        <th>
+                                            <?= $category['id'] ?>
+                                        </th>
+                                        <td>
+                                            <?= $category['title'] ?>
+
+                                        </td>
+                                        <td>
+                                            <a href="/admin-panel/index.php?entity=category&action=edit&id=<?= $category['id'] ?> "
+                                                class="btn btn-sm btn-outline-dark">ویرایش</a>
+                                            <a href="/admin-panel/index.php?entity=category&action=delete&id=<?= $category['id'] ?> "
+                                                class="btn btn-sm btn-outline-danger">حذف</a>
+                                        </td>
+                                    </tr>
+                                <?php endforeach ?>
+
+                            </tbody>
+                        </table>
+                    </div>
+                <?php else : ?>
+                    <div class="col">
+                        <div class="alert-danger">دسته بندی یافت نشد...</div>
+                    </div>
+
+                <?php endif ?>
+
+
+
             </div>
         </main>
     </div>
