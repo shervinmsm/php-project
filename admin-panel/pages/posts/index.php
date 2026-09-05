@@ -9,7 +9,8 @@ if (isset($_GET['action']) && isset($_GET['id'])) {
 
 
     $query->execute(['id' => $id]);
-    $posts = $db->query("SELECT * FROM posts ORDER BY id DESC ");
+    header("Location:index.php");
+    exit();
 }
 
 ?>
