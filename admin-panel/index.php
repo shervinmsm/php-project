@@ -6,22 +6,29 @@ if (isset($_GET['entity']) && isset($_GET['action']) && isset($_GET['id'])) {
     $action = $_GET['action'];
     $id = $_GET['id'];
 
-    switch ($entity) {
-        case 'post':
+    if ($action == "delete") {
 
-            $query = $db->prepare('DELETE FROM posts WHERE id = :id');
-            break;
+        switch ($entity) {
+            case 'post':
 
-        case 'comment':
+                $query = $db->prepare('DELETE FROM posts WHERE id = :id');
+                break;
 
-            $query = $db->prepare('DELETE FROM comments WHERE id = :id');
-            break;
+            case 'comment':
 
-        case 'category':
+                $query = $db->prepare('DELETE FROM comments WHERE id = :id');
+                break;
 
-            $query = $db->prepare('DELETE FROM categories WHERE id = :id');
-            break;
+            case 'category':
+
+                $query = $db->prepare('DELETE FROM categories WHERE id = :id');
+                break;
+        }
+    } elseif ($action == "approve") {
+
+        $query = $db->prepare("UPDATE comments SET status = '1' WHERE id = :id");
     }
+
 
     $query->execute(['id' => $id]);
 }
@@ -127,10 +134,18 @@ $categories = $db->query("SELECT * FROM categories ORDER BY id DESC ");
                                             <?= $comment['comment'] ?>
                                         </td>
                                         <td>
-                                            <a href="/admin-panel/index.php?entity=comment&action=edit&id=<?= $comment['id'] ?>"
-                                                class="btn btn-sm btn-outline-dark disabled">تایید شده</a>
+                                            <?php if ($comment['status']): ?>
+                                                <a href="#" class="btn btn-sm btn-outline-dark disabled">تایید شده</a>
+                                            <?php else : ?>
+
+                                                <a href="/admin-panel/index.php?entity=comment&action=approve&id=<?= $comment['id'] ?>"
+                                                    class="btn btn-sm btn-outline-info">در انتظار تایید</a>
+                                            <?php endif ?>
+
+
                                             <a href="/admin-panel/index.php?entity=comment&action=delete&id=<?= $comment['id'] ?>"
                                                 class="btn btn-sm btn-outline-danger">حذف</a>
+
                                         </td>
                                     </tr>
                                 <?php endforeach ?>
