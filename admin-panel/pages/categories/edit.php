@@ -1,5 +1,24 @@
 <?php include "../../include/layout/header.php";
 
+if (isset($_GET['id'])) {
+    $categoryId = $_GET['id'];
+
+    $category = $db->prepare("SELECT * FROM categories WHERE id = :id");
+    $category->execute(['id' => $categoryId]);
+    $category = $category->fetch();
+}
+
+if (isset($_POST['editCategory'])) {
+    if (!empty(trim($_POST['title']))) {
+        $title = $_POST['title'];
+        $categoryUpdate = $db->prepare("UPDATE categories SET title = :title WHERE id = :id");
+        $categoryUpdate->execute(['title' => $title, 'id' => $categoryId]);
+
+        header("Location:index.php");
+        exit();
+    }
+}
+
 ?>
 <div class="container-fluid">
     <div class="row">
@@ -15,14 +34,14 @@
 
             <!-- Posts -->
             <div class="mt-4">
-                <form class="row g-4">
+                <form method="POST" class="row g-4">
                     <div class="col-12 col-sm-6 col-md-4">
                         <label class="form-label">عنوان دسته بندی</label>
-                        <input type="text" class="form-control" value="طبیعت" />
+                        <input name="title" type="text" class="form-control" value="<?= $category['title'] ?>" />
                     </div>
 
                     <div class="col-12">
-                        <button type="submit" class="btn btn-dark">
+                        <button name="editCategory" type="submit" class="btn btn-dark">
                             ویرایش
                         </button>
                     </div>
