@@ -19,7 +19,7 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link link-body-emphasis text-decoration-none d-flex align-items-center gap-2 <?= str_contains($path, 'pages') ? 'text-secondary' : ''  ?>"
+                    <a class="nav-link link-body-emphasis text-decoration-none d-flex align-items-center gap-2 <?= str_contains($path, 'posts') ? 'text-secondary' : ''  ?>"
                         href="/admin-panel/pages/posts/index.php">
                         <i class="bi bi-file-earmark-image-fill fs-4 text-secondary"></i>
                         <span class="fw-bold">مقالات</span>
@@ -27,19 +27,18 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link link-body-emphasis text-decoration-none d-flex align-items-center gap-2"
-                        href="/admin-panel/pages/categories/index.html">
-                        <i
-                            class="bi bi-folder-fill fs-4 text-secondary <?= str_contains($path, 'categories') ? '' : 'text-secondary'  ?>"></i>
+                    <a class="nav-link link-body-emphasis text-decoration-none d-flex align-items-center gap-2 <?= str_contains($path, 'categories') ? 'text-secondary' : ''  ?>"
+                        href="/admin-panel/pages/categories/index.php">
+                        <i class="bi bi-folder-fill fs-4 text-secondary"></i>
 
                         <span class="fw-bold">دسته بندی</span>
                     </a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link link-body-emphasis text-decoration-none d-flex align-items-center gap-2"
-                        href="./pages/comments/index.html">
-                        <i class="bi bi-chat-left-text-fill fs-4 text-secondary"></i>
+                    <a class="nav-link link-body-emphasis text-decoration-none d-flex align-items-center gap-2 <?= str_contains($path, 'comments') ? 'text-secondary' : ''  ?>"
+                        href="/admin-panel/comments/index.php">
+                        <i class=" bi bi-chat-left-text-fill fs-4 text-secondary"></i>
 
                         <span class="fw-bold">کامنت ها</span>
                     </a>
