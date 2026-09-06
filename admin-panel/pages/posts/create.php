@@ -23,8 +23,28 @@ if (isset($_POST['addPost'])) {
     if (empty(trim($_POST['body']))) {
         $invalidInputBody = "فیلد متن مقاله الزامیست";
     }
-}
 
+    if (!empty(trim($_POST['title'])) && !empty(trim($_POST['author'])) && !empty(trim($_POST['body'])) && !empty(trim($_FILES['image']['name']))) {
+        $title = $_POST['title'];
+        $author = $_POST['author'];
+        $body = $_POST['body'];
+        $categoryId = $_POST['categoryId'];
+
+        $imageName = time() . "_" . $_FILES['image']['name'];
+        $tmpName = $_FILES['image']['tmp_name'];
+
+
+        if (move_uploaded_file($tmpName, "../../../uploads/posts/$imageName")) {
+
+            $postInsert = $db->prepare("INSERT INTO posts(title, author, category_id, body, image) VALUES(:title, :author, :category_id, :body, :image )");
+            $postInsert->execute(['title' => $title, 'author' => $author, 'category_id' => $categoryId, 'body' => $body, 'image' => $imageName]);
+            header("Location:index.php");
+            exit();
+        } else {
+            echo "Upload Error";
+        }
+    }
+}
 ?>
 
 <div class="container-fluid">
@@ -108,11 +128,4 @@ if (isset($_POST['addPost'])) {
         </main>
     </div>
 </div>
-
-<!-- <script
-            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
-            crossorigin="anonymous"
-        ></script> -->
-
 <?php include "../../include/layout/footer.php"; ?>
