@@ -25,10 +25,12 @@ if (isset($_POST['addPost'])) {
     }
 
     if (!empty(trim($_POST['title'])) && !empty(trim($_POST['author'])) && !empty(trim($_POST['body'])) && !empty(trim($_FILES['image']['name']))) {
-        $title = $_POST['title'];
-        $author = $_POST['author'];
-        $body = $_POST['body'];
-        $categoryId = $_POST['categoryId'];
+
+        $title = trim($_POST['title']);
+        $author = trim($_POST['author']);
+        $body = trim($_POST['body']);
+        $categoryId = trim($_POST['categoryId']);
+
 
         $imageName = time() . "_" . $_FILES['image']['name'];
         $tmpName = $_FILES['image']['tmp_name'];
@@ -90,7 +92,6 @@ if (isset($_POST['addPost'])) {
                                     <option value="<?= $category['id'] ?>">
                                         <?= $category['title'] ?>
                                     </option>
-
                                 <?php endforeach ?>
                             <?php endif ?>
                         </select>
@@ -111,13 +112,8 @@ if (isset($_POST['addPost'])) {
                         <textarea name="body" class="form-control" rows="6"></textarea>
                         <div class="form-text text-danger">
                             <?= $invalidInputBody ?>
-
                         </div>
-
-
-
                     </div>
-
                     <div class="col-12">
                         <button name="addPost" type="submit" class="btn btn-dark">
                             ایجاد

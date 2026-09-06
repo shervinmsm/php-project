@@ -1,4 +1,67 @@
-<?php include "../../include/layout/header.php"; ?>
+<?php include "../../include/layout/header.php";
+
+$categories = $db->query("SELECT * FROM categories ");
+
+$invalidInputTitle = "";
+$invalidInputAuthor = "";
+$invalidInputBody = "";
+
+
+
+if (isset($_GET['id'])) {
+    $postId = $_GET['id'];
+    $post = $db->prepare("SELECT * FROM posts WHERE id = :id");
+    $post->execute(['id' => $postId]);
+    $post = $post->fetch();
+}
+
+if (isset($_POST['editPost'])) {
+
+    if (empty(trim($_POST['title']))) {
+        $invalidInputTitle = "فیلد عنوان مقاله الزامیست";
+    }
+    if (empty(trim($_POST['author']))) {
+        $invalidInputAuthor = "فیلد نویسنده مقاله الزامیست";
+    }
+    if (empty(trim($_POST['body']))) {
+        $invalidInputBody = "فیلد متن مقاله الزامیست";
+    }
+}
+
+
+if (!empty(trim($_POST['title'])) && !empty(trim($_POST['author'])) && !empty(trim($_POST['body']))) {
+
+    $title = trim($_POST['title']);
+    $author = trim($_POST['author']);
+    $body = trim($_POST['body']);
+    $categoryId = trim($_POST['categoryId']);
+
+
+
+    if (!empty(trim($_FILES['image']['name']))) {
+        $imageName = time() . "_" . $_FILES['image']['name'];
+        $tmpName = $_FILES['image']['tmp_name'];
+
+
+        if (move_uploaded_file($tmpName, "../../../uploads/posts/$imageName")) {
+            $postUpdate = $db->prepare("UPDATE posts SET title = :title, author = :author, category_id = :categoryId, body = :body, image = :image WHERE id =:id");
+            $postUpdate->execute(['title' => $title, 'author' => $author, 'categoryId' => $categoryId, 'body' => $body, 'id' => $postId, 'image' => $imageName]);
+        } else {
+            echo "Upload Error";
+        }
+    } else {
+        $postUpdate = $db->prepare("UPDATE posts SET title = :title, author = :author, category_id = :categoryId, body = :body WHERE id =:id");
+        $postUpdate->execute(['title' => $title, 'author' => $author, 'categoryId' => $categoryId, 'body' => $body, 'id' => $postId]);
+    }
+
+
+    header("Location:index.php");
+    exit();
+}
+
+
+
+?>
 
 <div class="container-fluid">
     <div class="row">
@@ -13,54 +76,68 @@
 
             <!-- Posts -->
             <div class="mt-4">
-                <form class="row g-4">
+                <form class="row g-4" method="POST" enctype="multipart/form-data">
                     <div class="col-12 col-sm-6 col-md-4">
                         <label class="form-label">عنوان مقاله</label>
-                        <input type="text" class="form-control" value="لورم ایپسوم" />
+                        <input name="title" type="text" class="form-control" value="<?= $post['title'] ?>" />
+                        <div class="form-text text-danger">
+                            <?= $invalidInputTitle ?>
+                        </div>
+
+
                     </div>
 
-                    <div class="col-12 col-sm-6 col-md-4">
+                    <div class=" col-12 col-sm-6 col-md-4">
                         <label class="form-label">نویسنده مقاله</label>
-                        <input type="text" class="form-control" value="علی شیخ" />
+                        <input name="author" type="text" class="form-control" value="<?= $post['author'] ?>" />
+                        <div class="form-text text-danger">
+                            <?= $invalidInputAuthor ?>
+                        </div>
+
+
                     </div>
 
                     <div class="col-12 col-sm-6 col-md-4">
                         <label class="form-label">دسته بندی مقاله</label>
-                        <select class="form-select">
-                            <option value="1">طبیعت</option>
-                            <option value="2">گردشگری</option>
-                            <option value="3">تکنولوژی</option>
-                            <option value="4">متفرقه</option>
+                        <select name="categoryId" class="form-select">
+                            <?php if ($categories->rowCount() > 0): ?>
+                                <?php foreach ($categories as $category): ?>
+                                    <option <?= ($category['id'] == $post['category_id']) ? "selected" : "" ?> value="
+                                <?= $category['id'] ?>">
+                                        <?= $category['title'] ?>
+                                    </option>
+
+
+                                <?php endforeach ?>
+                            <?php endif ?>
                         </select>
                     </div>
 
                     <div class="col-12 col-sm-6 col-md-4">
                         <label for="formFile" class="form-label">تصویر مقاله</label>
-                        <input class="form-control" type="file" />
+                        <input name="image" class="form-control" type="file" />
                     </div>
 
                     <div class="col-12">
                         <label for="formFile" class="form-label">متن مقاله</label>
-                        <textarea class="form-control" rows="8">
-                            لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است.
-                            چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی
-                            تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد. کتابهای زیادی در
-                            شصت و سه درصد گذشته، حال و آینده شناخت فراوان جامعه و متخصصان را می طلبد تا با نرم افزارها
-                            شناخت بیشتری را برای طراحان رایانه ای علی الخصوص طراحان خلاقی و فرهنگ پیشرو در زبان فارسی
-                            ایجاد کرد. در این صورت می توان امید داشت که تمام و دشواری موجود در ارائه راهکارها و شرایط
-                            سخت تایپ به پایان رسد وزمان مورد نیاز شامل حروفچینی دستاوردهای اصلی و جوابگوی سوالات پیوسته
-                            اهل دنیای موجود طراحی اساسا مورد استفاده قرار گیرد.لورم ایپسوم متن ساختگی با تولید سادگی
-                            نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است.
+
+                        <textarea name="body" class="form-control" rows="8">
+                            <?= trim($post['body']) ?>
                         </textarea>
+                        <div class="form-text text-danger">
+                            <?= $invalidInputBody ?>
+                        </div>
+
+
                     </div>
 
 
                     <div class="col-12 col-sm-6 col-md-4">
-                        <img class="rounded" src="../../assets/images/1.jpg" width="300" />
+                        <img class="rounded" src="../../../uploads/posts/<?= $post['image'] ?>" width="300" />
                     </div>
 
                     <div class="col-12">
-                        <button type="submit" class="btn btn-dark">
+                        <button name="editPost" type="submit" class="btn btn-dark">
                             ویرایش
                         </button>
                     </div>
