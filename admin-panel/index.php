@@ -86,7 +86,7 @@ $categories = $db->query("SELECT * FROM categories ORDER BY id DESC ");
                                         <td>
                                             <a href="/admin-panel/index.php?entity=post&action=edit&id=<?= $post['id'] ?> "
                                                 class="btn btn-sm btn-outline-dark">ویرایش</a>
-                                            <a href="/admin-panel/index.php?entity=post&action=edit&id=<?= $post['id'] ?> "
+                                            <a href="/admin-panel/index.php?entity=post&action=delete&id=<?= $post['id'] ?> "
                                                 class="btn btn-sm btn-outline-danger">حذف</a>
                                         </td>
                                     </tr>
