@@ -12,7 +12,7 @@
             <ul class="nav flex-column pe-3">
                 <li class="nav-item">
                     <a class="nav-link link-body-emphasis text-decoration-none d-flex align-items-center gap-2 <?= str_contains($path, 'pages') ? '' : 'text-secondary'  ?>"
-                        href=" /admin-panel/index.html">
+                        href="/admin-panel/index.php">
                         <i class="bi bi-house-fill fs-4 text-secondary"></i>
                         <span class="fw-bold">داشبورد</span>
                     </a>
