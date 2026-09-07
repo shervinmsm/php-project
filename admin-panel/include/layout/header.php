@@ -1,8 +1,16 @@
 <?php
+session_start();
 include(__DIR__ . "/../config.php");
 include(__DIR__ . "/../db.php");
 
 $path = $_SERVER['REQUEST_URI'];
+
+if (!isset($_SESSION['email'])) {
+
+
+    header("Location:/admin-panel/pages/auth/login.php?err_msg=در ابتدا باید وارد سیستم شوید.");
+    exit();
+}
 
 
 ?>
